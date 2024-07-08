@@ -1,0 +1,63 @@
+---
+   # "Apache Installation using docker"
+    - name: Install EPEL repo
+      package: name=epel-release state=present 
+      when: ansible_distribution == "CentOS"
+
+    - name: download pip script
+      get_url: 
+        url: https://bootstrap.pypa.io/pip/2.7/get-pip.py
+        dest: /tmp/get-pip.py
+
+    - name: install python-pip
+      command: python2.7 /tmp/get-pip.py
+
+    - name: Install docker python
+      pip: name=docker-py
+
+    #- name: Install pre-requisite packages
+    #  yum: name='{{ item }}' state=latest
+    #  loop:
+    #      - yum-utils
+    #      - device-mapper-persistent-data
+    #      - lvm2
+
+
+    - name: Install pre-requisite packages under conditions
+      yum: name='{{ item }}' state=present
+      loop: 
+           - wget
+           - git
+      when: ansible_distribution == "CentOS"
+
+    #- name: Add Docker CE repo
+    #  get_url:
+    #    url: https://download.docker.com/linux/centos/docker-ce.repo
+    #    dest: /etc/yum.repos.d/docker-ce.repo
+
+    #- name: Start docker service
+    #  service: 
+    #    name: docker
+    #    state: started
+    #    enabled: yes
+    #  become: yes
+
+    #- name: pull httpds docker iso
+    #  docker_image:
+    #    name: httpd
+    #    source: pull
+
+    - name: Copy website file template
+      template:
+        src: index.html.j2
+        dest: "/home/{{ system_user }}/index.html"
+
+    - name: Create Apache container
+      docker_container:
+        name: webapp
+        image: httpd
+      # pull: true
+        ports:
+          - "80:80" 
+        volumes: 
+          - "/home/{{ system_user }}/index.html:/usr/local/apache2/htdocs/index.html"

@@ -1,0 +1,12 @@
+galaxy_info:
+  author: Franck Saounde based on a Eazytraining template 
+  description: Deploy static webapp using docker 
+
+  #license: 
+
+  #min_ansible_version: 
+
+  platforms:
+  - name: CentOS
+    versions:
+  # - all
