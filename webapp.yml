@@ -1,0 +1,10 @@
+---
+  - name: Deploy apache static website using ansible-galaxy roles
+    hosts: prod
+    become: true
+    vars:
+      system_user: admin
+    vars_files:
+      - files/secrets/credentials.yml
+    roles:
+      - { role: ansible-role-containerized-wordpress }

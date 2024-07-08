@@ -1,0 +1,3 @@
+---
+  # Install a role for static apache app
+  - src: https://github.com/francksaounde/ansible-role-static-apache-app.git
